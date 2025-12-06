@@ -1,22 +1,30 @@
-# study-n-code 
-coding practice + college programs
+![pic png](https://github.com/user-attachments/assets/0e202f38-f669-44fd-ae6f-6afbc3428a26)
+
+# soft-code-studio
+Tiny codes, small ideas, creative builds - a growing collection of experiments.
+
+#Code Experiments Collection
+
+Tiny codes. Small ideas. Creative builds.  
+This repository is a growing garden of experiments shaped through different languages — from patterns to interactive pieces, from tiny utilities to playful logic.
+
+#What's Inside?
+
+• Mini projects, simple programs, visual patterns  
+• Practice files from different languages  
+• Creative logic mixed with basic programming concepts  
+• Experiments that may one day become something bigger
+
+> This space is not about perfection — it’s about trying, creating, and letting ideas sprout.
+
 ---
-A simple and organized collection of my daily practice, college programs and small logical experiments.
 
-About- this repository is where i upload the programs i write on daily basis whether its for college, practice, or curiosity.
+#Languages You May Find Here
 
-Purpose- to stay consistent with coding by practicing daily and keeping my academic work well organized.
+Python, HTML, CSS, JS and any language future brings.
 
-Technology used- 
-Python, Java, C, C++, HTML, CSS, JS, small logic-building exercises
+---
 
-<<<<<<< HEAD
-Goal- 
--> To build strong logic.
--> To stay consistent.
--> Track the progress over time.
--> To maintain clean and readable code.
-=======
 #Purpose
 
 The goal of this repository is simple:
@@ -59,4 +67,3 @@ Hogwarts House Quiz (Python Console Game)-
 Players respond to personality-based questions, and each choice increases house points.
 At the end, the house with the highest score is revealed!
 >python "House_scores.py"
->>>>>>> d30dd3c3c49539dc7634d916e1bcbb368850c9e5
