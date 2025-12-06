@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Luna | Tech Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #05000a;
+            --accent: #a855ff;
+            --accent-soft: #6d28d9;
+            --text: #e5e7eb;
+            --text-muted: #9ca3af;
+            --border: rgba(148, 163, 184, 0.3);
+            --card-bg: rgba(15, 23, 42, 0.7);
+            --blur: 18px;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+                "Inter", sans-serif;
+            color: var(--text);
+            background: radial-gradient(circle at top, #1e0b3a 0, #02010a 55%, #000 100%);
+            overflow: hidden;
+        }
+
+        /* ---------- canvas background ---------- */
+        #bg-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        #spider-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* ---------- main layout ---------- */
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+
+        .glass {
+            background: var(--card-bg);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(var(--blur));
+            box-shadow:
+                0 0 30px rgba(155, 78, 238, 0.2),
+                0 0 90px rgba(40, 175, 232, 0.16);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 18px;
+            margin-bottom: 14px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-orb {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 25%, #f9fafb, #a855ff 40%, #020617 100%);
+            box-shadow:
+                0 0 18px rgba(168, 85, 255, 0.9),
+                0 0 40px rgba(56, 189, 248, 0.6);
+        }
+
+        .brand-title {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #e5e7eb;
+        }
+
+        .brand-sub {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--text-muted);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--text-muted);
+            align-items: center;
+        }
+
+        .pill {
+            border-radius: 999px;
+            padding: 6px 10px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pill-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 10px #22c55e;
+        }
+
+        .nav-links span.nav-item {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-links span.nav-item::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, #a855ff, #22d3ee);
+            transition: width 0.2s ease;
+        }
+
+        .nav-links span.nav-item:hover::after {
+            width: 100%;
+        }
+
+        .admin-btn {
+            padding: 4px 8px;
+            border-radius: 999px;
+            border: 1px dashed rgba(168, 85, 255, 0.7);
+            font-size: 0.7rem;
+            cursor: pointer;
+            background: rgba(15, 23, 42, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .admin-active {
+            color: #bbf7d0;
+            border-style: solid;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
+        }
+
+        /* ---------- hero section ---------- */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+            gap: 18px;
+            flex: 1;
+        }
+
+        .hero-main {
+            padding: 20px 22px 22px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-main::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background:
+                radial-gradient(circle at 10% 0, rgba(56, 189, 248, 0.12) 0, transparent 50%),
+                radial-gradient(circle at 90% 10%, rgba(168, 85, 255, 0.18) 0, transparent 55%),
+                radial-gradient(circle at 50% 100%, rgba(67, 56, 202, 0.2) 0, transparent 55%);
+            opacity: 0.9;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .eyebrow {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #a855ff, #22d3ee);
+            box-shadow: 0 0 16px rgba(168, 85, 255, 0.8);
+        }
+
+        .hero-title {
+            font-size: clamp(1.9rem, 3.2vw, 2.5rem);
+            line-height: 1.1;
+            margin-bottom: 10px;
+            text-shadow:
+                0 0 18px rgba(168, 85, 255, 0.8),
+                0 0 32px rgba(56, 189, 248, 0.5);
+        }
+
+        .hero-title span {
+            background: linear-gradient(90deg, #a855ff, #22d3ee);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero-sub {
+            font-size: 0.9rem;
+            max-width: 480px;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+
+        .hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+            font-size: 0.75rem;
+        }
+
+        .hero-tag {
+            border-radius: 999px;
+            padding: 5px 10px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            background: radial-gradient(circle at 0 0, rgba(168, 85, 255, 0.22), transparent 55%);
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+        }
+
+        .hero-cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary {
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(248, 250, 252, 0.8);
+            background: radial-gradient(circle at 10% 0, #a855ff 0, #4f46e5 40%, #020617 100%);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow:
+                0 0 24px rgba(168, 85, 255, 0.9),
+                0 0 70px rgba(56, 189, 248, 0.6);
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px) scale(1.01);
+            box-shadow:
+                0 0 32px rgba(168, 85, 255, 1),
+                0 0 90px rgba(56, 189, 248, 0.9);
+        }
+
+        .btn-primary span.icon {
+            font-size: 1rem;
+        }
+
+        .hero-note {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            opacity: 0.9;
+        }
+
+        /* ---------- side panel ---------- */
+        .hero-side {
+            padding: 18px 18px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .panel {
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.75));
+            padding: 10px 12px;
+            font-size: 0.78rem;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.68rem;
+        }
+
+        .panel-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .panel-title-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #a855ff;
+            box-shadow: 0 0 14px rgba(168, 85, 255, 1);
+        }
+
+        .panel-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .panel-pill {
+            padding: 4px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            cursor: default;
+        }
+
+        .panel-pill.admin-removable {
+            cursor: pointer;
+        }
+
+        .panel-pill.admin-removable:hover {
+            border-color: #f97373;
+            color: #fecaca;
+        }
+
+        .panel-footer-mini {
+            margin-top: 6px;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 10px #22c55e;
+        }
+
+        .add-nowplaying-btn {
+            padding: 3px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(168, 85, 255, 0.7);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            cursor: pointer;
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        /* ---------- Projects modal ---------- */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at top, rgba(15, 23, 42, 0.6), rgba(0, 0, 0, 0.92));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.18s ease;
+        }
+
+        .modal-backdrop.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            width: min(640px, 100vw - 32px);
+            max-height: calc(100vh - 80px);
+            background: rgba(15, 23, 42, 0.98);
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            box-shadow:
+                0 0 40px rgba(15, 23, 42, 0.9),
+                0 0 80px rgba(168, 85, 255, 0.7);
+            padding: 14px 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-title span.badge {
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+        }
+
+        .modal-close {
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            padding: 4px 9px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.1fr);
+            gap: 12px;
+            margin-top: 6px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .projects-list {
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6));
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            overflow-y: auto;
+        }
+
+        .project-card {
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            padding: 7px 8px;
+            font-size: 0.78rem;
+            background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.8));
+            cursor: pointer;
+            transition: border 0.12s ease, transform 0.08s ease, box-shadow 0.12s ease;
+        }
+
+        .project-card:hover {
+            border-color: rgba(168, 85, 255, 0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 0 18px rgba(168, 85, 255, 0.35);
+        }
+
+        .project-name {
+            font-size: 0.82rem;
+            margin-bottom: 2px;
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+            gap: 4px;
+        }
+
+        .project-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .project-link {
+            font-size: 0.7rem;
+            margin-top: 3px;
+            color: #a5b4fc;
+            text-decoration: none;
+        }
+
+        .project-link:hover {
+            text-decoration: underline;
+        }
+
+        .projects-empty {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .projects-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-bottom: 4px;
+            font-size: 0.7rem;
+        }
+
+        .small-btn {
+            padding: 4px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: rgba(15, 23, 42, 0.9);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.13em;
+            cursor: pointer;
+        }
+
+        .small-btn.primary {
+            border-color: rgba(168, 85, 255, 0.9);
+            color: #e5e7eb;
+        }
+
+        .small-btn.danger {
+            border-color: rgba(239, 68, 68, 0.9);
+            color: #fecaca;
+        }
+
+        .small-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        .project-form {
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.92));
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.74rem;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .form-label {
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-size: 0.64rem;
+            color: var(--text-muted);
+        }
+
+        .form-input,
+        .form-textarea {
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 8px;
+            border: 1px solid rgba(51, 65, 85, 0.9);
+            padding: 5px 7px;
+            color: var(--text);
+            font-size: 0.75rem;
+            outline: none;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            border-color: rgba(168, 85, 255, 0.9);
+            box-shadow: 0 0 0 1px rgba(168, 85, 255, 0.7);
+        }
+
+        .form-textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        .form-tip {
+            font-size: 0.64rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .mode-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 900px) {
+            .hero-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .nav-links {
+                font-size: 0.7rem;
+                flex-wrap: wrap;
+            }
+
+            .hero-main {
+                padding: 16px;
+            }
+
+            .hero-side {
+                padding: 14px;
+            }
+
+            .modal-body {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Glowing spider canvas background -->
+    <div id="bg-container">
+        <canvas id="spider-canvas"></canvas>
+    </div>
+
+    <!-- Foreground website UI -->
+    <main class="page">
+        <header class="glass nav">
+            <div class="nav-left">
+                <div class="logo-orb"></div>
+                <div>
+                    <div class="brand-title">Luna</div>
+                    <div class="brand-sub">Tech · AI · Gaming · Innovation</div>
+                </div>
+            </div>
+            <div class="nav-links">
+                <span class="nav-item" id="nav-projects">Projects</span>
+                <span class="nav-item">About</span>
+                <span class="nav-item">Contact</span>
+                <div class="pill">
+                    <div class="pill-dot"></div>
+                    <span>Available for collab</span>
+                </div>
+                <button id="adminToggle" class="admin-btn" type="button">Admin</button>
+            </div>
+        </header>
+
+        <section class="glass hero-grid">
+            <!-- left / main -->
+            <div class="hero-main">
+                <div class="eyebrow">
+                    <div class="eyebrow-dot"></div>
+                    Interactive Developer · Cyber curious
+                </div>
+
+                <h1 class="hero-title">
+                    Hi, I'm <span>Luna</span>.<br />
+                    I turn <span>games, code</span> &amp; <span>glitches</span> into experiences.
+                </h1>
+
+                <p class="hero-sub">
+                    Frontend, experimentation and cyber-ish aesthetics.
+                    I love building playful, interactive things that feel like a mix of a
+                    terminal and a sci-fi game menu.
+                </p>
+
+                <div class="hero-tags">
+                    <div class="hero-tag">Web dev </div>
+                    <div class="hero-tag">Cyber vibes</div>
+                    <div class="hero-tag">Python · C ·Java · HTML· CSS · JS</div>
+                    <div class="hero-tag">UI experiments</div>
+                </div>
+
+                <div class="hero-cta-row">
+                    <button class="btn-primary" id="viewProjectsBtn" type="button">
+                        <span class="icon">▶</span>
+                        <span>View projects</span>
+                    </button>
+                    <span class="hero-note">
+                        *Move your cursor — my pet spiders follow you.
+                    </span>
+                </div>
+
+                <div class="hero-note">
+                    Your edits (projects + now playing) are saved on this device in localStorage.
+                </div>
+            </div>
+
+            <!-- right / side panels -->
+            <aside class="hero-side">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <div class="panel-title-dot"></div>
+                            <span>Tech stack</span>
+                        </div>
+                        <span>v1.0.0</span>
+                    </div>
+
+                    <div class="stack-list">
+                        <div>
+                            <div class="stack-item-label">Frontend — React / Vanilla JS</div>
+                            <div class="stack-meter">
+                                <div class="stack-fill" style="transform: scaleX(0.88);"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="stack-item-label">Python — Data / scripting</div>
+                            <div class="stack-meter">
+                                <div class="stack-fill" style="transform: scaleX(0.8);"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="stack-item-label">Cyber experiments</div>
+                            <div class="stack-meter">
+                                <div class="stack-fill" style="transform: scaleX(0.72);"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-footer-mini">
+                        <span><span class="status-dot"></span> Currently grinding skills</span>
+                        <span>EST. 2025</span>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <div class="panel-title-dot"></div>
+                            <span>Now playing</span>
+                        </div>
+                        <button id="addNowPlayingBtn" class="add-nowplaying-btn" type="button">
+                            + Add
+                        </button>
+                    </div>
+
+                    <div id="nowPlayingList" class="panel-pills">
+                        <!-- dynamic -->
+                    </div>
+
+                    <div class="panel-footer-mini">
+                        <span>Tap "Admin" to edit items.</span>
+                        <span>▲ 1% better / day</span>
+                    </div>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <!-- Projects modal -->
+    <div id="projectsModalBackdrop" class="modal-backdrop">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modal-header">
+                <div class="modal-title">
+                    Projects
+                    <span class="badge" id="projectsCountBadge">0 items</span>
+                </div>
+                <button class="modal-close" id="projectsCloseBtn" type="button">Close ✕</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- list -->
+                <div>
+                    <div class="projects-toolbar">
+                        <span class="mode-label" id="adminModeLabel">Viewer mode</span>
+                        <button id="addProjectBtn" class="small-btn primary" type="button" disabled>Add</button>
+                        <button id="deleteProjectBtn" class="small-btn danger" type="button" disabled>Delete</button>
+                    </div>
+                    <div id="projectsList" class="projects-list">
+                        <!-- project cards -->
+                    </div>
+                </div>
+
+                <!-- form -->
+                <form id="projectForm" class="project-form">
+                    <div class="form-field">
+                        <label class="form-label" for="projectName">Title</label>
+                        <input id="projectName" class="form-input" type="text"
+                            placeholder="Example: Cyber Task Tracker" />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label" for="projectType">Type / Tagline</label>
+                        <input id="projectType" class="form-input" type="text"
+                            placeholder="Mini game · Web app · Experiment" />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label" for="projectLink">Link (optional)</label>
+                        <input id="projectLink" class="form-input" type="text" placeholder="https://github.com/..." />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label" for="projectDescription">Short description</label>
+                        <textarea id="projectDescription" class="form-textarea"
+                            placeholder="What does this project do? What did you learn?"></textarea>
+                    </div>
+                    <div class="form-tip" id="formTip">
+                        Select a project from the list to edit. In viewer mode you can only read.
+                    </div>
+                    <div class="form-actions">
+                        <button id="resetFormBtn" class="small-btn" type="button">Clear</button>
+                        <button id="saveProjectBtn" class="small-btn primary" type="button" disabled>Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ----------------- Admin mode & data -----------------
+        // CHANGE THIS to your own secret PIN (not real security, but stops casual edits)
+        const ADMIN_PIN = "7116"; // maybe your birthday or something
+
+        let adminMode = false;
+        let selectedProjectIndex = -1;
+
+        const projectsKey = "lunaPortfolioProjects_v1";
+        const nowPlayingKey = "lunaNowPlaying_v1";
+
+        const defaultProjects = [
+            {
+                name: "Spider Cursor Universe",
+                type: "Interactive background · JS",
+                description: "Experimental glowing spider effect following the cursor, inspired by glitchy space webs.",
+                link: ""
+            },
+            {
+                name: "Cyber To-Do Console",
+                type: "Mini app · Frontend",
+                description: "CLI-style task tracker with neon accents and keyboard-driven UI.",
+                link: ""
+            }
+        ];
+
+        const defaultNowPlaying = [
+            "Learning cybersecurity basics",
+            "Practicing Python & JS",
+            "Designing my dream portfolio"
+        ];
+
+        let projects = [];
+        let nowPlaying = [];
+
+        function loadData() {
+            try {
+                const storedProjects = JSON.parse(localStorage.getItem(projectsKey));
+                const storedNow = JSON.parse(localStorage.getItem(nowPlayingKey));
+                projects = Array.isArray(storedProjects) ? storedProjects : defaultProjects.slice();
+                nowPlaying = Array.isArray(storedNow) ? storedNow : defaultNowPlaying.slice();
+            } catch {
+                projects = defaultProjects.slice();
+                nowPlaying = defaultNowPlaying.slice();
+            }
+        }
+
+        function saveProjects() {
+            localStorage.setItem(projectsKey, JSON.stringify(projects));
+        }
+
+        function saveNowPlaying() {
+            localStorage.setItem(nowPlayingKey, JSON.stringify(nowPlaying));
+        }
+
+        // ----------------- DOM refs -----------------
+        const adminToggle = document.getElementById("adminToggle");
+        const adminModeLabel = document.getElementById("adminModeLabel");
+
+        const nowPlayingListEl = document.getElementById("nowPlayingList");
+        const addNowPlayingBtn = document.getElementById("addNowPlayingBtn");
+
+        const projectsModalBackdrop = document.getElementById("projectsModalBackdrop");
+        const viewProjectsBtn = document.getElementById("viewProjectsBtn");
+        const navProjects = document.getElementById("nav-projects");
+        const projectsCloseBtn = document.getElementById("projectsCloseBtn");
+
+        const projectsListEl = document.getElementById("projectsList");
+        const projectsCountBadge = document.getElementById("projectsCountBadge");
+
+        const addProjectBtn = document.getElementById("addProjectBtn");
+        const deleteProjectBtn = document.getElementById("deleteProjectBtn");
+        const saveProjectBtn = document.getElementById("saveProjectBtn");
+        const resetFormBtn = document.getElementById("resetFormBtn");
+        const formTip = document.getElementById("formTip");
+
+        const projectNameInput = document.getElementById("projectName");
+        const projectTypeInput = document.getElementById("projectType");
+        const projectLinkInput = document.getElementById("projectLink");
+        const projectDescriptionInput = document.getElementById("projectDescription");
+
+        // ----------------- Now Playing UI -----------------
+        function renderNowPlaying() {
+            nowPlayingListEl.innerHTML = "";
+            if (nowPlaying.length === 0) {
+                const span = document.createElement("span");
+                span.textContent = "Nothing here yet. Add what you're currently obsessed with.";
+                span.className = "panel-pill";
+                nowPlayingListEl.appendChild(span);
+                return;
+            }
+
+            nowPlaying.forEach((text, index) => {
+                const pill = document.createElement("span");
+                pill.textContent = text;
+                pill.className = "panel-pill";
+                if (adminMode) {
+                    pill.classList.add("admin-removable");
+                    pill.title = "Click to remove this item";
+                    pill.addEventListener("click", () => {
+                        if (confirm(`Remove "${text}"?`)) {
+                            nowPlaying.splice(index, 1);
+                            saveNowPlaying();
+                            renderNowPlaying();
+                        }
+                    });
+                }
+                nowPlayingListEl.appendChild(pill);
+            });
+        }
+
+        function promptAddNowPlaying() {
+            if (!adminMode) {
+                alert("Turn on Admin mode to add 'Now playing' items.");
+                return;
+            }
+            const text = prompt("What do you want to add to 'Now playing'? (e.g. 'Building my first game')");
+            if (text && text.trim()) {
+                nowPlaying.push(text.trim());
+                saveNowPlaying();
+                renderNowPlaying();
+            }
+        }
+
+        // ----------------- Projects UI -----------------
+        function openProjectsModal() {
+            projectsModalBackdrop.classList.add("show");
+            renderProjectsList();
+            fillFormFromSelection();
+        }
+
+        function closeProjectsModal() {
+            projectsModalBackdrop.classList.remove("show");
+            selectedProjectIndex = -1;
+            highlightSelectedProject();
+            fillFormFromSelection();
+        }
+
+        function renderProjectsList() {
+            projectsListEl.innerHTML = "";
+            projectsCountBadge.textContent = `${projects.length} item${projects.length === 1 ? "" : "s"}`;
+
+            if (projects.length === 0) {
+                const empty = document.createElement("div");
+                empty.className = "projects-empty";
+                empty.textContent = "No projects yet. In Admin mode, click 'Add' to create your first one.";
+                projectsListEl.appendChild(empty);
+                return;
+            }
+
+            projects.forEach((p, index) => {
+                const card = document.createElement("div");
+                card.className = "project-card";
+                card.dataset.index = index;
+
+                const title = document.createElement("div");
+                title.className = "project-name";
+                title.textContent = p.name || "(Untitled project)";
+
+                const meta = document.createElement("div");
+                meta.className = "project-meta";
+                const left = document.createElement("span");
+                left.textContent = p.type || "Project";
+                const right = document.createElement("span");
+                right.textContent = `#${index + 1}`;
+                meta.appendChild(left);
+                meta.appendChild(right);
+
+                const desc = document.createElement("div");
+                desc.className = "project-desc";
+                desc.textContent = p.description || "No description yet.";
+
+                card.appendChild(title);
+                card.appendChild(meta);
+                card.appendChild(desc);
+
+                if (p.link && p.link.trim()) {
+                    const a = document.createElement("a");
+                    a.className = "project-link";
+                    a.href = p.link;
+                    a.target = "_blank";
+                    a.rel = "noreferrer";
+                    a.textContent = "Open link ↗";
+                    card.appendChild(a);
+                }
+
+                card.addEventListener("click", () => {
+                    selectedProjectIndex = index;
+                    highlightSelectedProject();
+                    fillFormFromSelection();
+                });
+
+                projectsListEl.appendChild(card);
+            });
+
+            highlightSelectedProject();
+            updateProjectButtons();
+        }
+
+        function highlightSelectedProject() {
+            const cards = projectsListEl.querySelectorAll(".project-card");
+            cards.forEach((card) => {
+                const idx = Number(card.dataset.index);
+                if (idx === selectedProjectIndex) {
+                    card.style.borderColor = "rgba(168, 85, 255, 0.9)";
+                    card.style.boxShadow = "0 0 18px rgba(168, 85, 255, 0.5)";
+                } else {
+                    card.style.borderColor = "rgba(148, 163, 184, 0.4)";
+                    card.style.boxShadow = "none";
+                }
+            });
+            updateProjectButtons();
+        }
+
+        function fillFormFromSelection() {
+            if (selectedProjectIndex >= 0 && projects[selectedProjectIndex]) {
+                const p = projects[selectedProjectIndex];
+                projectNameInput.value = p.name || "";
+                projectTypeInput.value = p.type || "";
+                projectLinkInput.value = p.link || "";
+                projectDescriptionInput.value = p.description || "";
+            } else {
+                projectNameInput.value = "";
+                projectTypeInput.value = "";
+                projectLinkInput.value = "";
+                projectDescriptionInput.value = "";
+            }
+            updateProjectButtons();
+        }
+
+        function updateProjectButtons() {
+            addProjectBtn.disabled = !adminMode;
+            saveProjectBtn.disabled = !adminMode;
+            deleteProjectBtn.disabled = !adminMode || selectedProjectIndex < 0;
+            adminModeLabel.textContent = adminMode ? "Admin mode" : "Viewer mode";
+
+            formTip.textContent = adminMode
+                ? "You are in Admin mode. Add new projects or edit the selected one, then click Save."
+                : "Viewer mode: you can read and click links, but editing is disabled until Admin is on.";
+        }
+
+        function clearProjectForm() {
+            selectedProjectIndex = -1;
+            projectNameInput.value = "";
+            projectTypeInput.value = "";
+            projectLinkInput.value = "";
+            projectDescriptionInput.value = "";
+            highlightSelectedProject();
+            updateProjectButtons();
+        }
+
+        function saveProjectFromForm() {
+            if (!adminMode) {
+                alert("Turn on Admin mode to edit projects.");
+                return;
+            }
+            const name = projectNameInput.value.trim();
+            const type = projectTypeInput.value.trim();
+            const link = projectLinkInput.value.trim();
+            const description = projectDescriptionInput.value.trim();
+
+            if (!name) {
+                alert("Please enter a project title.");
+                return;
+            }
+
+            const data = { name, type, link, description };
+
+            if (selectedProjectIndex >= 0 && projects[selectedProjectIndex]) {
+                projects[selectedProjectIndex] = data;
+            } else {
+                projects.push(data);
+                selectedProjectIndex = projects.length - 1;
+            }
+
+            saveProjects();
+            renderProjectsList();
+            fillFormFromSelection();
+        }
+
+        function addNewProject() {
+            if (!adminMode) {
+                alert("Turn on Admin mode to add projects.");
+                return;
+            }
+            clearProjectForm();
+            projectNameInput.focus();
+        }
+
+        function deleteSelectedProject() {
+            if (!adminMode || selectedProjectIndex < 0) return;
+            const p = projects[selectedProjectIndex];
+            if (!confirm(`Delete project "${p.name || "(Untitled)"}"?`)) return;
+            projects.splice(selectedProjectIndex, 1);
+            selectedProjectIndex = -1;
+            saveProjects();
+            renderProjectsList();
+            fillFormFromSelection();
+        }
+
+        // ----------------- Admin toggle -----------------
+        function toggleAdmin() {
+            if (!adminMode) {
+                const entered = prompt("Enter Admin PIN:");
+                if (entered === null) return;
+                if (entered === ADMIN_PIN) {
+                    adminMode = true;
+                    adminToggle.classList.add("admin-active");
+                    adminToggle.textContent = "Admin ✓";
+                } else {
+                    alert("Wrong PIN.");
+                    return;
+                }
+            } else {
+                adminMode = false;
+                adminToggle.classList.remove("admin-active");
+                adminToggle.textContent = "Admin";
+            }
+            renderNowPlaying();
+            updateProjectButtons();
+            highlightSelectedProject();
+        }
+
+        // ----------------- Events for UI -----------------
+        adminToggle.addEventListener("click", toggleAdmin);
+        addNowPlayingBtn.addEventListener("click", promptAddNowPlaying);
+
+        viewProjectsBtn.addEventListener("click", openProjectsModal);
+        navProjects.addEventListener("click", openProjectsModal);
+        projectsCloseBtn.addEventListener("click", closeProjectsModal);
+
+        projectsModalBackdrop.addEventListener("click", (e) => {
+            if (e.target === projectsModalBackdrop) closeProjectsModal();
+        });
+
+        addProjectBtn.addEventListener("click", addNewProject);
+        deleteProjectBtn.addEventListener("click", deleteSelectedProject);
+        saveProjectBtn.addEventListener("click", saveProjectFromForm);
+        resetFormBtn.addEventListener("click", clearProjectForm);
+
+        // prevent form submit reload
+        document.getElementById("projectForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+        });
+
+        // ----------------- Init data/UI -----------------
+        loadData();
+        renderNowPlaying();
+        renderProjectsList();
+        updateProjectButtons();
+
+        // ----------------- Spider canvas, purple glow + dots -----------------
+        const canvas = document.getElementById("spider-canvas");
+        const ctx = canvas.getContext("2d");
+
+        let width = 0;
+        let height = 0;
+        const { sin, cos, PI, hypot } = Math;
+
+        function rand(range = 1, offset = 0) {
+            return Math.random() * range + offset;
+        }
+
+        function lerp(a, b, t) {
+            return a + (b - a) * t;
+        }
+
+        function makePoint(x, y) {
+            return { x, y };
+        }
+
+        function mapArray(count, fn) {
+            const arr = new Array(count);
+            for (let i = 0; i < count; i++) arr[i] = fn(i);
+            return arr;
+        }
+
+        // soft noise to wiggle webs
+        function noise2D(x, y, t) {
+            const w0 =
+                sin(0.32 * x + 1.41 * t + 2.03 +
+                    2.51 * sin(0.37 * y - 1.27 * t + 0.91));
+            const w1 =
+                sin(0.21 * y + 1.59 * t + 2.77 +
+                    2.29 * sin(0.49 * x - 1.17 * t + 0.63));
+            return w0 + w1;
+        }
+
+        function drawFilledCircle(x, y, r) {
+            ctx.beginPath();
+            ctx.ellipse(x, y, r, r, 0, 0, PI * 2);
+            ctx.fill();
+        }
+
+        function drawWigglyLine(x0, y0, x1, y1, t) {
+            ctx.beginPath();
+            ctx.moveTo(x0, y0);
+            const steps = 90;
+            for (let i = 1; i <= steps; i++) {
+                const k = i / steps;
+                let x = lerp(x0, x1, k);
+                let y = lerp(y0, y1, k);
+                const n = noise2D(x * 0.2 + x0 * 0.05, y * 0.2 + y0 * 0.05, t) * 2;
+                ctx.lineTo(x + n, y + n);
+            }
+            ctx.stroke();
+        }
+
+        // starry dot background (not too dense)
+        let starDots = [];
+        function createStars() {
+            starDots = mapArray(140, () => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                r: Math.random() * 1.4 + 0.5,
+                alpha: Math.random() * 0.4 + 0.3,
+                tw: Math.random() * 2 + 0.5
+            }));
+        }
+
+        function drawStars(time) {
+            ctx.save();
+            ctx.fillStyle = "#ffffff";
+            starDots.forEach((s) => {
+                const twinkle = 0.6 + 0.4 * Math.sin(time * s.tw + s.x * 0.01);
+                ctx.globalAlpha = s.alpha * twinkle;
+                drawFilledCircle(s.x, s.y, s.r);
+            });
+            ctx.restore();
+            ctx.globalAlpha = 1;
+        }
+
+        function createSpider() {
+            const nodes = mapArray(260, () => ({
+                x: rand(window.innerWidth),
+                y: rand(window.innerHeight),
+                amount: 0,
+                radius: 0
+            }));
+
+            const spokes = mapArray(9, (i) => {
+                const angle = (i / 9) * PI * 2;
+                return { x: cos(angle), y: sin(angle) };
+            });
+
+            const phase = rand(100);
+
+            let targetX = rand(window.innerWidth);
+            let targetY = rand(window.innerHeight);
+
+            let x = rand(window.innerWidth);
+            let y = rand(window.innerHeight);
+
+            const freqX = rand(0.5, 0.5);
+            const freqY = rand(0.5, 0.5);
+            const wander = makePoint(rand(55, 55), rand(55, 55));
+
+            function baseRadius() {
+                return window.innerWidth / rand(110, 140);
+            }
+
+            let bodyRadius = baseRadius();
+
+            function drawNode(node, time) {
+                const len = node.amount;
+                if (len <= 0) return;
+
+                const eased = len * len;
+
+                // glow pass
+                ctx.save();
+                ctx.shadowColor = "rgba(168, 85, 255, 0.85)";
+                ctx.shadowBlur = 16;
+                ctx.lineWidth = 1.2;
+                ctx.strokeStyle = "rgba(236, 236, 255, 0.9)";
+                ctx.fillStyle = "rgba(244, 244, 255, 1)";
+
+                for (const spoke of spokes) {
+                    const sx = x + spoke.x * bodyRadius;
+                    const sy = y + spoke.y * bodyRadius;
+
+                    const px = lerp(sx, node.x, eased);
+                    const py = lerp(sy, node.y, eased);
+
+                    drawWigglyLine(px, py, sx, sy, time);
+                }
+
+                drawFilledCircle(node.x, node.y, node.radius + 0.4);
+                ctx.restore();
+
+                // inner sharper pass
+                ctx.save();
+                ctx.shadowColor = "rgba(168, 85, 255, 0.45)";
+                ctx.shadowBlur = 6;
+                ctx.lineWidth = 0.6;
+                ctx.strokeStyle = "rgba(180, 148, 255, 0.9)";
+                ctx.fillStyle = "rgba(226, 232, 255, 0.8)";
+                for (const spoke of spokes) {
+                    const sx = x + spoke.x * (bodyRadius * 0.9);
+                    const sy = y + spoke.y * (bodyRadius * 0.9);
+
+                    const px = lerp(sx, node.x, eased);
+                    const py = lerp(sy, node.y, eased);
+
+                    drawWigglyLine(px, py, sx, sy, time);
+                }
+                drawFilledCircle(node.x, node.y, node.radius * 0.6);
+                ctx.restore();
+            }
+
+            return {
+                setTarget(px, py) {
+                    targetX = px;
+                    targetY = py;
+                },
+
+                update(time) {
+                    const wanderX = cos(time * freqX + phase) * wander.x;
+                    const wanderY = sin(time * freqY + phase) * wander.y;
+
+                    const fx = targetX + wanderX;
+                    const fy = targetY + wanderY;
+
+                    const maxStep = window.innerWidth / 100;
+                    x += Math.max(-maxStep, Math.min(maxStep, (fx - x) / 10));
+                    y += Math.max(-maxStep, Math.min(maxStep, (fy - y) / 10));
+
+                    bodyRadius = baseRadius();
+
+                    let activated = 0;
+
+                    for (let i = 0; i < nodes.length; i++) {
+                        const node = nodes[i];
+                        const dx = node.x - x;
+                        const dy = node.y - y;
+                        const dist = hypot(dx, dy) || 1;
+
+                        let r = Math.min(2.3, window.innerWidth / (dist * 5));
+
+                        const close = dist < window.innerWidth / 9 && activated < 9;
+                        let delta = close ? 0.12 : -0.1;
+
+                        if (close) {
+                            r *= 1.7;
+                            activated++;
+                        }
+
+                        node.radius = r;
+                        node.amount = Math.max(0, Math.min(node.amount + delta, 1));
+
+                        drawNode(node, time);
+                    }
+                }
+            };
+        }
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            createStars();
+        }
+
+        window.addEventListener("resize", resize);
+        resize();
+
+        const spiders = [createSpider(), createSpider()];
+
+        window.addEventListener("pointermove", (event) => {
+            const { clientX, clientY } = event;
+            spiders.forEach((spider) => spider.setTarget(clientX, clientY));
+        });
+
+        function loop(timestamp) {
+            if (width !== window.innerWidth || height !== window.innerHeight) {
+                resize();
+            }
+
+            ctx.fillStyle = "rgba(1, 1, 10, 1)";
+            drawFilledCircle(0, 0, width * 10);
+
+            const t = timestamp / 1000;
+            drawStars(t);
+            spiders.forEach((spider) => spider.update(t));
+
+            requestAnimationFrame(loop);
+        }
+
+        requestAnimationFrame(loop);
+    </script>
+</body>
+
+</html>

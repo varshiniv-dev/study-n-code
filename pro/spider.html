@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spider Cursor Effect</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      font-family: system-ui, sans-serif;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let w, h;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    // --- Star field background ---
+    const stars = [];
+    const STAR_COUNT = 350;
+
+    function createStars() {
+      stars.length = 0;
+      for (let i = 0; i < STAR_COUNT; i++) {
+        stars.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 1.4 + 0.2,
+          a: Math.random() * 0.7 + 0.3,
+        });
+      }
+    }
+    createStars();
+
+    function drawStars() {
+      ctx.save();
+      ctx.fillStyle = "#fff";
+      for (const s of stars) {
+        ctx.globalAlpha = s.a;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // --- Spider class ---
+    class Spider {
+      constructor() {
+        this.segmentCount = 28;
+        this.segmentLength = 18;
+        this.points = [];
+        const startX = w / 2;
+        const startY = h / 2;
+
+        for (let i = 0; i < this.segmentCount; i++) {
+          this.points.push({ x: startX, y: startY });
+        }
+
+        this.tx = startX;
+        this.ty = startY;
+      }
+
+      follow(x, y) {
+        this.tx = x;
+        this.ty = y;
+      }
+
+      tick(dt) {
+        // move head toward target
+        const head = this.points[0];
+        const ease = 0.2;
+        head.x += (this.tx - head.x) * ease;
+        head.y += (this.ty - head.y) * ease;
+
+        // rest of body segments follow previous segment
+        const k = 0.35; // stiffness
+        for (let i = 1; i < this.points.length; i++) {
+          const prev = this.points[i - 1];
+          const p = this.points[i];
+          let dx = prev.x - p.x;
+          let dy = prev.y - p.y;
+          const dist = Math.hypot(dx, dy) || 1;
+          const diff = dist - this.segmentLength;
+
+          dx /= dist;
+          dy /= dist;
+
+          p.x += dx * diff * k;
+          p.y += dy * diff * k;
+        }
+
+        this.draw();
+      }
+
+      draw() {
+        ctx.beginPath();
+        for (let i = 0; i < this.points.length; i++) {
+          const p = this.points[i];
+          if (i === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        }
+        ctx.stroke();
+
+        // little joints / particles
+        for (let i = 0; i < this.points.length; i += 3) {
+          const p = this.points[i];
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2.1, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    // --- Create spiders ---
+    const spiders = [];
+    const SPAWN_COUNT = 2;
+    for (let i = 0; i < SPAWN_COUNT; i++) {
+      spiders.push(new Spider());
+    }
+
+    // pointer moves
+    window.addEventListener("pointermove", (e) => {
+      spiders.forEach((spider) => spider.follow(e.clientX, e.clientY));
+    });
+
+    // --- Animation loop ---
+    let lastTime = 0;
+    function animate(t) {
+      const dt = (t - lastTime) / 1000 || 0;
+      lastTime = t;
+
+      // background
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, w, h);
+      drawStars();
+
+      ctx.strokeStyle = "#fff";
+      ctx.fillStyle = "#fff";
+      ctx.lineWidth = 1;
+
+      spiders.forEach((spider) => spider.tick(dt));
+
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
